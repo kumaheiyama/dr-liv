@@ -12,12 +12,12 @@ $(function() {
         $(".current_patient img").attr('src', currentPatient.imageUrl);
 
         ailments = [
-            // { name: 'fever', imageUrl: 'images/ailments/01_fever.png',
-            //     remedies: ['sleep', 'rest', 'lots_of_water', 'pain_killer'] },
+            { name: 'fever', imageUrl: 'images/ailments/01_fever.png',
+                remedies: ['sleep', 'rest', 'lots_of_water', 'pain_killer'] },
             { name: 'tummy ache', imageUrl: 'images/ailments/02_tummy_ache.png',
                 remedies: ['toilet', 'plums', 'lots_of_water'] },
-            // { name: 'runny nose', imageUrl: 'images/ailments/03_runny_nose.png',
-            //     remedies: ['sleep', 'rest', 'wait'] },
+            { name: 'runny nose', imageUrl: 'images/ailments/03_runny_nose.png',
+                remedies: ['sleep', 'rest', 'wait'] },
             { name: 'spots', imageUrl: 'images/ailments/04_spots.png',
                 remedies: ['chickenpox_medicine'] }
         ];
@@ -49,6 +49,15 @@ $(function() {
             $("#remedies").append($("<img>", { 'class': remedyClass, 'src': remedy.imageUrl }));
         });
 
+        $(".draggable").draggable(
+            {
+                cursor: 'move',
+                cursorAt: { top: 50, left:50 },
+                containment: '.main-ui',
+                revert: true,
+                opacity: 0.7
+            }
+        );
         var acceptedRemedies = '.acceptedRemedy';
         var canGoToNextPatient = false;
         $(".droppableRemedy img").droppable({
