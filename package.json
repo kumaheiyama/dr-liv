@@ -1,7 +1,7 @@
 {
   "name": "dr-liv",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.2.0",
+  "description": "Dr Liv is a small children's game about working in a hospital or primary care facility.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
