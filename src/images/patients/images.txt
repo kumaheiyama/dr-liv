@@ -1,0 +1,22 @@
+ Volume in drive C has no label.
+ Volume Serial Number is B070-CC79
+
+ Directory of C:\Data\Dropbox\Kod\Projekt\dr-liv\design\images\patients
+
+[.]                            [..]
+01_fine_teddy.png              01_teddy_bear.png
+02_bandaged_bump.png           02_giant_bump.png
+03_cut_in_stomache.png         03_plaster_on_stomache.png
+04_cut_in_belly.png            05_happy_snake.png
+05_snake_with_a_cold.png       06_broken_leg.png
+06_leg_in_cast.png             07_spider.png
+08_bug_with_tummy_ache.png     08_happy_bug.png
+09_angry_pig.png               10_alient_a_ok.png
+10_alien_with_a_cold.png       11_fine_bunny.png
+12_bunny_with_chickenpox.png   12_happy_lion.png
+13_thumbs_up.png               14_scared_bug.png
+15_happy_mouse.png             15_mouse_with_tummy_ache.png
+16_clown_with_runny_nose.png   16_happy_clown.png
+17_snake_feeling_down.png      images.txt
+              28 File(s)      1ÿ541ÿ864 bytes
+               2 Dir(s)  187ÿ188ÿ879ÿ360 bytes free
