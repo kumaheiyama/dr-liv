@@ -14,7 +14,7 @@ $(function() {
             { imageUrl: '06_broken_leg.png', curedImageUrl: '06_leg_in_cast.png' },
             { imageUrl: '07_spider.png', curedImageUrl: '13_thumbs_up.png' },
             { imageUrl: '08_bug_with_tummy_ache.png', curedImageUrl: '08_happy_bug.png' },
-            { imageUrl: '09_angry_pig.png', curedImageUrl: '13_thumbs_up.png' },
+            { imageUrl: '09_angry_pig.png', curedImageUrl: '13_thumbs_up.png', remedies: ['comfort_food'] },
             { imageUrl: '10_alien_with_a_cold.png', curedImageUrl: '10_alient_a_ok.png' },
             { imageUrl: '11_bunny_with_chickenpox.png', curedImageUrl: '11_fine_bunny.png' },
             { imageUrl: '14_scared_bug.png', curedImageUrl: '13_thumbs_up.png' },
@@ -81,7 +81,7 @@ $(function() {
             {
                 cursor: 'move',
                 cursorAt: { top: 50, left: 50 },
-                containment: '.main-ui',
+                containment: '.main-container',
                 revert: true,
                 opacity: 0.7
             }
@@ -93,8 +93,11 @@ $(function() {
                 'ui-droppable-active': 'ui-state-default'
             },
             drop: function(event, ui) {
-                $(".current_patient img").attr('src', basePatientsFolder + currentPatient.curedImageUrl);
-                $(".next_patient").show();
+                $(".current_patient img").fadeOut(function() {
+                    $(".current_patient img").attr('src', basePatientsFolder + currentPatient.curedImageUrl);
+                    $(".current_patient img").fadeIn();
+                });
+                $(".next_patient").fadeIn();
             }
         });
         $(".next_patient").hide();
@@ -105,7 +108,7 @@ $(function() {
         {
             cursor: 'move',
             cursorAt: { top: 50, left: 50 },
-            containment: '.main-ui',
+            containment: '.main-container',
             revert: true,
             opacity: 0.7
         }
