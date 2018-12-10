@@ -1,30 +1,60 @@
 $(function() {
     var basePatientsFolder = 'images/patients/';
     var baseRemediesFolder = 'images/remedies/';
+    var waitingRoom = [];
     var patients = [];
     var currentPatient = null;
     var remedies = [];
+    var noOfPatientsInWaitingRoom = 3;
 
     function init() {
-        patients = [
-            { imageUrl: '01_teddy_bear.png', curedImageUrl: '01_fine_teddy.png', remedies: ['chickenpox_medicine'] },
-            { imageUrl: '02_giant_bump.png', curedImageUrl: '02_bandaged_bump.png', remedies: ['rest', 'bandage'] },
-            { imageUrl: '03_cut_in_stomache.png', curedImageUrl: '03_plaster_on_stomache.png', remedies: ['plaster'] },
-            { imageUrl: '05_snake_with_a_cold.png', curedImageUrl: '05_happy_snake.png', remedies: ['sleep', 'rest', 'wait', 'tissues'] },
-            { imageUrl: '06_broken_leg.png', curedImageUrl: '06_leg_in_cast.png' },
-            { imageUrl: '07_spider.png', curedImageUrl: '13_thumbs_up.png' },
-            { imageUrl: '08_bug_with_tummy_ache.png', curedImageUrl: '08_happy_bug.png' },
-            { imageUrl: '09_angry_pig.png', curedImageUrl: '13_thumbs_up.png', remedies: ['comfort_food'] },
-            { imageUrl: '10_alien_with_a_cold.png', curedImageUrl: '10_alient_a_ok.png' },
-            { imageUrl: '11_bunny_with_chickenpox.png', curedImageUrl: '11_fine_bunny.png' },
-            { imageUrl: '14_scared_bug.png', curedImageUrl: '13_thumbs_up.png' },
-            { imageUrl: '15_mouse_with_tummy_ache.png', curedImageUrl: '15_happy_mouse.png' },
-            { imageUrl: '16_clown_with_runny_nose.png', curedImageUrl: '16_happy_clown.png' },
-            { imageUrl: '17_snake_feeling_down.png', curedImageUrl: '13_thumbs_up.png' }
-        ];
-        currentPatient = patients[Math.floor(Math.random() * patients.length)];
-        $(".current_patient img").attr('src', basePatientsFolder + currentPatient.imageUrl);
+        initPatients();
+        initRemedies();
+        initWaitingRoom();
 
+        setCurrentPatient(waitingRoom[Math.floor(Math.random() * waitingRoom.length)]);
+        setRemediesAccordingToCurrentPatient();
+        setDraggables();
+        setDroppableRemedies();
+        setDroppablePatients();
+
+        $(".next_patient").hide();
+    }
+    init();
+
+    function initPatients() {
+        patients = [
+            { name: 'teddy_bear', imageUrl: '01_teddy_bear.png', curedImageUrl: '01_fine_teddy.png', remedies: ['chickenpox_medicine', 'rest', 'sleep'] },
+            { name: 'giant_bump', imageUrl: '02_giant_bump.png', curedImageUrl: '02_bandaged_bump.png', remedies: ['rest', 'bandage'] },
+            { name: 'cut_in_stomache', imageUrl: '03_cut_in_stomache.png', curedImageUrl: '03_plaster_on_stomache.png', remedies: ['plaster'] },
+            { name: 'snake_with_a_cold', imageUrl: '05_snake_with_a_cold.png', curedImageUrl: '05_happy_snake.png', remedies: ['sleep', 'rest', 'wait', 'tissues'] },
+            { name: 'broken_leg', imageUrl: '06_broken_leg.png', curedImageUrl: '06_leg_in_cast.png', remedies: ['pain_killer', 'blister_pack'] },
+            { name: 'spider', imageUrl: '07_spider.png', curedImageUrl: '13_thumbs_up.png', remedies: ['medicine_bottle', 'comfort_food'] },
+            { name: 'bug_with_tummy_ache', imageUrl: '08_bug_with_tummy_ache.png', curedImageUrl: '08_happy_bug.png', remedies: ['plums', 'toilet', 'pear', 'rest'] },
+            { name: 'angry_pig', imageUrl: '09_angry_pig.png', curedImageUrl: '13_thumbs_up.png', remedies: ['comfort_food', 'pear', 'love', 'hug', 'icecream'] },
+            { name: 'alien_with_a_cold', imageUrl: '10_alien_with_a_cold.png', curedImageUrl: '10_alient_a_ok.png', remedies: ['handkerchief', 'rest', 'sleep', 'pill_bottle', 'medicine'] },
+            { name: 'bunny_with_chickenpox', imageUrl: '11_bunny_with_chickenpox.png', curedImageUrl: '11_fine_bunny.png', remedies: ['chickenpox_medicine', 'rest', 'sleep'] },
+            { name: 'scared_bug', imageUrl: '14_scared_bug.png', curedImageUrl: '13_thumbs_up.png', remedies: ['hug', 'love', 'read_comics'] },
+            { name: 'mouse_with_tummy_ache', imageUrl: '15_mouse_with_tummy_ache.png', curedImageUrl: '15_happy_mouse.png', remedies: ['toilet', 'plums', 'plenty_of_water'] },
+            { name: 'clown_with_runny_nose', imageUrl: '16_clown_with_runny_nose.png', curedImageUrl: '16_happy_clown.png', remedies: ['handkerchief', 'pill_bottle', 'rest', 'sleep'] },
+            { name: 'snake_feeling_down', imageUrl: '17_snake_feeling_down.png', curedImageUrl: '13_thumbs_up.png', remedies: ['lollipop', 'hug', 'love', 'icecream'] }
+        ];
+    }
+    function initWaitingRoom() {
+        do {
+            const patient = patients[Math.floor(Math.random() * patients.length)];
+            if (_.find(waitingRoom, function(pat) { return pat.name === patient.name; }) === undefined) {
+                waitingRoom.push(patient);
+            }
+        }
+        while (waitingRoom.length < noOfPatientsInWaitingRoom);
+        $("#waitingRoom").empty();
+        _.forEach(waitingRoom, function(waitingPatient) {
+            var waitingClass = 'draggable waitingPatient ' + waitingPatient.name;
+            $("#waitingRoom").append($("<img>", { 'class': waitingClass, 'src': basePatientsFolder + waitingPatient.imageUrl }));
+        });
+    }
+    function initRemedies() {
         remedies = [
             //{ name: 'toilet', imageUrl:'01_toilet.png' },
             { name: 'hug', imageUrl:'02_hug.png' },
@@ -60,7 +90,7 @@ $(function() {
             { name: 'handkerchief', imageUrl:'32_handkerchief.png' },
             { name: 'carrot', imageUrl:'33_carrot.png' },
             { name: 'pear', imageUrl:'34_pear.png' },
-            { name: 'plenty_of_water', imageUrl:'35_plenty_of_water.png' },
+            //{ name: 'plenty_of_water', imageUrl:'35_plenty_of_water.png' },
             { name: 'toilet', imageUrl:'36_toilet.png' },
             { name: 'plenty_of_water', imageUrl:'37_plenty_of_water.png' },
             { name: 'socks', imageUrl:'38_socks.png' },
@@ -68,6 +98,8 @@ $(function() {
             { name: 'medicine', imageUrl:'40_medicine.png' },
             { name: 'rest', imageUrl:'41_rest.png' }
         ];
+    }
+    function setRemediesAccordingToCurrentPatient() {
         $("#remedies").empty();
         _.forEach(remedies, function(remedy) {
             var remedyClass = 'draggable remedy ' + remedy.name;
@@ -76,7 +108,12 @@ $(function() {
             }
             $("#remedies").append($("<img>", { 'class': remedyClass, 'src': baseRemediesFolder + remedy.imageUrl }));
         });
-
+    }
+    function setCurrentPatient(patient) {
+        currentPatient = patient;
+        $(".current_patient img").attr('src', basePatientsFolder + currentPatient.imageUrl);
+    }
+    function setDraggables() {
         $(".draggable").draggable(
             {
                 cursor: 'move',
@@ -86,6 +123,8 @@ $(function() {
                 opacity: 0.7
             }
         );
+    }
+    function setDroppableRemedies() {
         var acceptedRemedies = '.acceptedRemedy';
         $(".droppableRemedy img").droppable({
             accept: acceptedRemedies,
@@ -100,20 +139,49 @@ $(function() {
                 $(".next_patient").fadeIn();
             }
         });
-        $(".next_patient").hide();
     }
-    init();
+    function setDroppablePatients() {
+        var acceptedPatients = '.waitingPatient';
+        $(".droppablePatient img").droppable({
+            accept: acceptedPatients,
+            classes: {
+                'ui-droppable-active': 'ui-state-default'
+            },
+            drop: function(event, ui) {
+                var classNames = ui.draggable.context.className.split(' ');
+                var waitingRoomNames = _.map(waitingRoom, 'name');
+                var droppedPatientName = _.filter(classNames, function(className) { return _.includes(waitingRoomNames, className); });
+                var droppedPatient = _.find(waitingRoom, function(pat) { return pat.name === droppedPatientName[0]; });
 
-    $(".draggable").draggable(
-        {
-            cursor: 'move',
-            cursorAt: { top: 50, left: 50 },
-            containment: '.main-container',
-            revert: true,
-            opacity: 0.7
-        }
-    );
+                if (droppedPatient !== undefined) {
+                    setCurrentPatient(droppedPatient);
+                    setRemediesAccordingToCurrentPatient();
+                    setDraggables();
+                    setDroppableRemedies();
+                    setDroppablePatients();
+                }
+            }
+        });
+    }
+
+    setDraggables();
     $(".next_patient").click(function() {
-        init();
+        var completedPatient = _.find(waitingRoom, function(pat) { return pat.name === currentPatient.name; });
+        var completedPatientIndex = _.findIndex(waitingRoom, function(pat) { return pat.name === currentPatient.name; });
+        
+        if (completedPatientIndex !== -1) {
+            waitingRoom.splice(completedPatientIndex, 1);
+        }
+        
+        $("#waitingRoom").children().each(function() {
+            if ($(this).hasClass(completedPatient.name)) {
+                $(this).fadeOut();
+            }
+        });
+        $(".current_patient img").fadeOut();
+
+        //init();
+        //kolla om alla patienter är klara?
+        $(".next_patient").hide();
     });
 } );
