@@ -12,13 +12,11 @@ $(function() {
         initRemedies();
         initWaitingRoom();
 
-        setCurrentPatient(waitingRoom[Math.floor(Math.random() * waitingRoom.length)]);
-        setRemediesAccordingToCurrentPatient();
-        setDraggables();
-        setDroppableRemedies();
-        setDroppablePatients();
+        initCurrentPatient(waitingRoom[Math.floor(Math.random() * waitingRoom.length)]);
 
+        $("#thankYou").hide();
         $(".next_patient").hide();
+        $("#patient").css({float: 'none', maxWidth: '100%'});
     }
     init();
 
@@ -41,6 +39,7 @@ $(function() {
         ];
     }
     function initWaitingRoom() {
+        if (patients.length < noOfPatientsInWaitingRoom) { noOfPatientsInWaitingRoom = waitingRoom.length; }
         do {
             const patient = patients[Math.floor(Math.random() * patients.length)];
             if (_.find(waitingRoom, function(pat) { return pat.name === patient.name; }) === undefined) {
@@ -114,54 +113,64 @@ $(function() {
         $(".current_patient img").attr('src', basePatientsFolder + currentPatient.imageUrl);
     }
     function setDraggables() {
-        $(".draggable").draggable(
+        $("#remedies .draggable").draggable(
             {
                 cursor: 'move',
-                cursorAt: { top: 50, left: 50 },
+                cursorAt: { top: 25, left: 25 },
+                containment: '.main-container',
+                revert: true,
+                opacity: 0.7
+            }
+        );
+        $("#waitingRoom .draggable").draggable(
+            {
+                cursor: 'move',
+                cursorAt: { top: 25, left: 25 },
                 containment: '.main-container',
                 revert: true,
                 opacity: 0.7
             }
         );
     }
-    function setDroppableRemedies() {
-        var acceptedRemedies = '.acceptedRemedy';
-        $(".droppableRemedy img").droppable({
-            accept: acceptedRemedies,
-            classes: {
-                'ui-droppable-active': 'ui-state-default'
-            },
-            drop: function(event, ui) {
-                $(".current_patient img").fadeOut(function() {
-                    $(".current_patient img").attr('src', basePatientsFolder + currentPatient.curedImageUrl);
-                    $(".current_patient img").fadeIn();
-                });
-                $(".next_patient").fadeIn();
-            }
-        });
-    }
-    function setDroppablePatients() {
-        var acceptedPatients = '.waitingPatient';
+    function setDroppables() {
+        var acceptedClasses = '.waitingPatient, .acceptedRemedy';
         $(".droppablePatient img").droppable({
-            accept: acceptedPatients,
+            accept: acceptedClasses,
             classes: {
                 'ui-droppable-active': 'ui-state-default'
             },
             drop: function(event, ui) {
                 var classNames = ui.draggable.context.className.split(' ');
-                var waitingRoomNames = _.map(waitingRoom, 'name');
-                var droppedPatientName = _.filter(classNames, function(className) { return _.includes(waitingRoomNames, className); });
-                var droppedPatient = _.find(waitingRoom, function(pat) { return pat.name === droppedPatientName[0]; });
 
-                if (droppedPatient !== undefined) {
-                    setCurrentPatient(droppedPatient);
-                    setRemediesAccordingToCurrentPatient();
-                    setDraggables();
-                    setDroppableRemedies();
-                    setDroppablePatients();
+                var isDroppedPatient = _.indexOf(classNames, 'waitingPatient') > -1;
+                var isDroppedRemedy = _.indexOf(classNames, 'remedy') > -1;
+                
+                if (isDroppedPatient) {
+                    var waitingRoomNames = _.map(waitingRoom, 'name');
+                    var droppedPatientName = _.filter(classNames, function(className) { return _.includes(waitingRoomNames, className); });
+                    var droppedPatient = _.find(waitingRoom, function(pat) { return pat.name === droppedPatientName[0]; });
+
+                    if (droppedPatient !== undefined) {
+                        initCurrentPatient(droppedPatient);
+                    }
+                }
+                else if (isDroppedRemedy) {
+                    $(".current_patient img").fadeOut(function() {
+                        $(".current_patient img").attr('src', basePatientsFolder + currentPatient.curedImageUrl);
+                        $(".current_patient img").fadeIn();
+                        $(".next_patient").fadeIn();
+                        $("#patient").css({float: 'left', maxWidth: '50%'});
+                    });
                 }
             }
         });
+    }
+    function initCurrentPatient(patient) {
+        setCurrentPatient(patient);
+        setRemediesAccordingToCurrentPatient();
+        setDraggables();
+        setDroppables();
+        $(".current_patient img").fadeIn();
     }
 
     setDraggables();
@@ -178,10 +187,23 @@ $(function() {
                 $(this).fadeOut();
             }
         });
-        $(".current_patient img").fadeOut();
+        $(".current_patient img").fadeOut(function() {
+            if (waitingRoom.length > 0) {
+                initCurrentPatient(waitingRoom[Math.floor(Math.random() * waitingRoom.length)]);
+            }
+            else {
+                $(".waitingRoomSidebar").hide();
+                $("#patient").hide();
+                $(".remediesSidebar").hide();
+                $("#thankYou").fadeIn();
+            }
 
-        //init();
-        //kolla om alla patienter är klara?
-        $(".next_patient").hide();
+            $(".next_patient").hide();
+            $("#patient").css({float: 'none', maxWidth: '100%'});
+        });
     });
+
+    $("#thankYou img").click(function () {
+        location.reload(true);
+    })
 } );

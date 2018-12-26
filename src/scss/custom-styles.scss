@@ -6,7 +6,7 @@ html, body {
 body {background: #f9f9f9 url(../images/page-bg-1.jpg);}
 
 .main-container {
-	height:auto; 
+	height: auto !important; 
 	height: 100%;
 	min-height: 100%;
 }
