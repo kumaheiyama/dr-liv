@@ -1,0 +1,8 @@
+.remedy-card {
+  margin-bottom: 10px;
+}
+
+  .remedy-card img {
+    max-height: 100px;
+    max-width: 100px;
+  }

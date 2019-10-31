@@ -1,0 +1,27 @@
+.home-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.patients-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  flex-direction: column;
+}
+
+.current-patient-container {
+  text-align: center;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.remedies-container {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}

@@ -1,0 +1,11 @@
+<div class="home-container">
+  <div class="patients-container" *ngIf="waitingRoom && waitingRoom.length > 0">
+    <patient-card *ngFor="let patient of waitingRoom" [patient]="patient"></patient-card>
+  </div>
+  <div class="current-patient-container" *ngIf="waitingRoom && waitingRoom.length > 0">
+    <current-patient [patient]="waitingRoom[0]"></current-patient>
+  </div>
+  <div class="remedies-container" *ngIf="remedies && remedies.length > 0">
+    <remedy-card *ngFor="let remedy of remedies" [remedy]="remedy"></remedy-card>
+  </div>
+</div>
